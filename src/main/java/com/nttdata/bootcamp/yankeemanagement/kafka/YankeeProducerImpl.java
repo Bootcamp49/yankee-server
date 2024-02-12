@@ -20,9 +20,8 @@ public class YankeeProducerImpl implements YankeeProducer {
     NewTopic topicCreateMovement;
     @Autowired
     NewTopic topicPayCredit;
-
+    @Autowired
     KafkaTemplate<String, YankeeTransferEvent> kafkaYankeeTemplate;
-
     @Override
     public void createClientMessage(ClientEvent event) {
         Message<ClientEvent> message = MessageBuilder
