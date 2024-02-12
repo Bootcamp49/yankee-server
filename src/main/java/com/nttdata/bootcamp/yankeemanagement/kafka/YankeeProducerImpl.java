@@ -1,5 +1,6 @@
 package com.nttdata.bootcamp.yankeemanagement.kafka;
 
+import com.google.gson.Gson;
 import com.nttdata.bootcamp.yankeemanagement.model.ClientEvent;
 import com.nttdata.bootcamp.yankeemanagement.model.YankeeTransferEvent;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -24,8 +25,9 @@ public class YankeeProducerImpl implements YankeeProducer {
     KafkaTemplate<String, YankeeTransferEvent> kafkaYankeeTemplate;
     @Override
     public void createClientMessage(ClientEvent event) {
-        Message<ClientEvent> message = MessageBuilder
-                .withPayload(event)
+        String eventMessage = eventToJsonString(event);
+        Message<String> message = MessageBuilder
+                .withPayload(eventMessage)
                 .setHeader(KafkaHeaders.TOPIC, createClient.name())
                 .build();
         kafkaClientTemplate.send(message);
@@ -33,8 +35,9 @@ public class YankeeProducerImpl implements YankeeProducer {
 
     @Override
     public void createMovementTransfer(YankeeTransferEvent event) {
-        Message<YankeeTransferEvent> message = MessageBuilder
-                .withPayload(event)
+        String eventMessage = eventToJsonString(event);
+        Message<String> message = MessageBuilder
+                .withPayload(eventMessage)
                 .setHeader(KafkaHeaders.TOPIC, topicCreateMovement.name())
                 .build();
         kafkaYankeeTemplate.send(message);
@@ -42,10 +45,15 @@ public class YankeeProducerImpl implements YankeeProducer {
 
     @Override
     public void payCreditActiveProduct(YankeeTransferEvent event) {
-        Message<YankeeTransferEvent> message = MessageBuilder
-                .withPayload(event)
+        String eventMessage = eventToJsonString(event);
+        Message<String> message = MessageBuilder
+                .withPayload(eventMessage)
                 .setHeader(KafkaHeaders.TOPIC, topicPayCredit.name())
                 .build();
         kafkaYankeeTemplate.send(message);
     }
+    private <T>String eventToJsonString(T event){
+        Gson gson = new Gson();
+        return gson.toJson(event);
+    };
 }
