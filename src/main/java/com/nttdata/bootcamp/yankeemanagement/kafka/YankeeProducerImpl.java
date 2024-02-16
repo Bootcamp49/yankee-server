@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class YankeeProducerImpl implements YankeeProducer {
     @Autowired
-    KafkaTemplate<String, ClientEvent> kafkaClientTemplate;
+    private KafkaTemplate<String, ClientEvent> kafkaClientTemplate;
     @Autowired
-    NewTopic createClient;
+    private NewTopic createClient;
     @Autowired
-    NewTopic topicCreateMovement;
+    private NewTopic topicCreateMovement;
     @Autowired
-    NewTopic topicPayCredit;
+    private NewTopic topicPayCredit;
     @Autowired
     KafkaTemplate<String, YankeeTransferEvent> kafkaYankeeTemplate;
     @Override
